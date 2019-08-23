@@ -3,8 +3,6 @@
         sold_energy_battery = 0
         self.action_executed = False
         if delta_power < 0:
-            print('delta_power < 0')
-            print('self.prv_action', self.prv_action)
             if self.battery.SOC > self.battery.SOC_max:
                 action_txt = 'sell'
                 action = action_txt
@@ -12,45 +10,42 @@
                 _, sold_energy_battery = self.battery.step(action_txt, delta_power*2, delta_t = 30)
                 power_realized = power_realized - delta_power
             if self.battery.SOC >= self.battery.SOC_min and self.battery.SOC < self.battery.SOC_max:
-                action_txt = 'store'
+                action_txt = 'sell'
                 action = action_txt
+                _, sold_energy_battery = self.battery.step(action, delta_power*2, delta_t = 30)
+                power_realized = power_realized - delta_power
                 logging.info(action_txt)
             if self.battery.SOC < self.battery.SOC_min:
                 action_txt = 'stay'
                 logging.info(action_txt)
                 action = action_txt
         elif delta_power > 0:
-            print('delta_power > 0')
-            print('self.prv_action', self.prv_action)
             if self.battery.SOC > self.battery.SOC_max:
                 action_txt = 'sell'
                 logging.info(action_txt)
                 _, sold_energy_battery = self.battery.step('sell', delta_power*2, delta_t = 30)
                 power_realized = power_realized - delta_power
             if self.battery.SOC >= self.battery.SOC_min and self.battery.SOC < self.battery.SOC_max:
-                action_txt = 'sell'
+                action_txt = 'store'
                 action = action_txt
                 logging.info(action_txt)
-                _, sold_energy_battery = self.battery.step('sell', delta_power*2, delta_t = 30)
+                self.battery.step(action, delta_power*2, delta_t = 30)
                 #power_realized = power_realized - delta_power
             if self.battery.SOC < self.battery.SOC_min:
                 action_txt = 'store'
                 logging.info(action_txt)
                 action = action_txt
         else:
-            print('delta_power = 0')
-            print('self.prv_action', self.prv_action)
-            if self.battery.SOC >= self.battery.SOC_max:
+            if self.battery.SOC > self.battery.SOC_max:
                 action_txt = 'sell'
-                action = action_txt
                 logging.info(action_txt)
                 _, sold_energy_battery = self.battery.step('sell', delta_power*2, delta_t = 30)
                 power_realized = power_realized - delta_power
-            if self.battery.SOC >= self.battery.SOC_min and self.battery.SOC < self.battery.SOC_max:
-                action_txt = 'store'
+            elif self.battery.SOC >= self.battery.SOC_min and self.battery.SOC < self.battery.SOC_max:
+                action_txt = 'stay'
                 action = action_txt
                 logging.info(action_txt)
-            if self.battery.SOC < self.battery.SOC_min:
+            else:
                 action_txt = 'stay'
                 logging.info(action_txt)
                 action = action_txt
