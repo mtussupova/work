@@ -8,3 +8,7 @@ deepq -> ENGIE Green – Artificial Intelligence explorer in solar energy manage
 
 Tower1 -> DSC-GBS-Predict-Building-Attendance
 
+image -> PowerBI Tractebel PRject
+
+RH name -> gender prediction by name
+
